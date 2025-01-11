@@ -4,6 +4,7 @@ import { createServer } from 'http'; // For creating an HTTP server
 import { Server } from 'socket.io'; // For WebSocket support
 import router from './router.js';
 import handleSocketConnection from './controller/socket-controller.js';
+import connectToMongoDB from './config/mongodb-atlas.js';
 
 const app = express();
 app.use(express.json());
@@ -19,11 +20,12 @@ const io = new Server(httpServer, {
 const corsOptions = {
     origin: ['http://localhost:5173'],
     credentials: true,
-};
+};  
 app.use(cors(corsOptions));
 
-// TODO: mongodb connection
 
+// Mongodb connection
+connectToMongoDB();
 
 // API routes
 router(app);
@@ -32,6 +34,6 @@ router(app);
 io.on('connection', handleSocketConnection);
 
 
-httpServer.listen(3000, () => {
-    console.log('Server is running on port 3000');
+httpServer.listen(process.env.PORT, () => {
+    console.log('Server is running on port ' + process.env.PORT);
 });
