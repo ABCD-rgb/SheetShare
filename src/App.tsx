@@ -7,6 +7,7 @@ import {
 
 // pages
 import Home from './pages/Home';
+import Login from './pages/Login';
 import Sheet from './pages/Sheet';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
     createRoutesFromElements(
       <>
         <Route path="/" element={<Home />} />,
+        <Route path="/login" element={<Login />} />,
         <Route path="/sheet" element={<Sheet />} />,
       </>
     )
