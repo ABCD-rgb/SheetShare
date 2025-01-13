@@ -1,4 +1,4 @@
-import { getAllSheets } from "./controller/sheet-controller.js";
+import { getAllSheets, updateSheetByIndex } from "./controller/sheet-controller.js";
 
 const routes = (app) => {
     // insert routes here and its handlers
@@ -6,6 +6,7 @@ const routes = (app) => {
         res.send('Hello World :0');
     });
     app.get('/sheets/getAllSheets', getAllSheets);
+    app.put('/sheets/updateSheetByIndex', updateSheetByIndex);
 }
 
 
