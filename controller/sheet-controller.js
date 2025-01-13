@@ -9,14 +9,11 @@ const getAllSheets = async (req, res) => {
             const row = [];
             Object.keys(sheet.toObject()).sort().forEach(key => {
                 if (key !== 'Row' && key !== '_id') {
-                    console.log('key:', key, 'item:', sheet[key]);
                     row.push({ value: sheet[key] || '' });
                 }
             });
             return row;
         });
-        console.log('formattedSheets:', formattedSheets);
-
 
         res.status(200).json({formattedSheets});
     } catch (error) {
@@ -26,6 +23,23 @@ const getAllSheets = async (req, res) => {
 };
 
 
-export { getAllSheets };
+// Update sheet by index (row, col)
+const updateSheetByIndex = async (req, res) => {
+    const { row, col, value } = req.body;
+    try {
+        const sheet = await Sheet.findOne({ Row: row+1 });
+        sheet[`Col${col+1}`] = value;
+        await sheet.save();
+        
+        res.status(200).json({ success: true, message: 'Sheet updated' });
+    } catch (error) {
+        console.error('Sheet controller error:', error);
+        res.status(400).json({ success:false, message: 'Error updating sheets' });
+    }
+
+};
+
+
+export { getAllSheets, updateSheetByIndex };
 
 
