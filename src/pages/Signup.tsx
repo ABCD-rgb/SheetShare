@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import Error from "../components/Alerts/Error";
 
 
 function Signup() {
@@ -35,6 +36,7 @@ function Signup() {
             window.location.href = "/";
         } catch (error) {
             console.error("signupError:", error);
+            alert("User exists or error occurred. Please try again.");
         }
 
     };
