@@ -1,4 +1,5 @@
 import { getAllSheets, updateSheetByIndex } from "./controller/sheet-controller.js";
+import { createUser } from "./controller/user-controller.js";
 
 const routes = (app) => {
     // insert routes here and its handlers
@@ -7,6 +8,7 @@ const routes = (app) => {
     });
     app.get('/sheets/getAllSheets', getAllSheets);
     app.put('/sheets/updateSheetByIndex', updateSheetByIndex);
+    app.post('/auth/createUser', createUser);
 }
 
 
