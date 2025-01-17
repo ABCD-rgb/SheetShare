@@ -1,11 +1,11 @@
 
 function Login() {
     return (
-        <div className="flex items-center justify-center h-screen">
-            <div className="card bg-base-100 w-1/2 h-96 shadow-xl">
-                <div className="hero bg-base-200 min-h-screen">
+        <div className="flex justify-around h-screen">
+            <div className="card w-full h-96">
+                <div className="hero min-h-screen">
                     <div className="hero-content flex-col lg:flex-row-reverse">
-                        <div className="ml-6 text-center lg:text-left">
+                        <div className="pl-6 text-center lg:text-left">
                         <h1 className="text-6xl font-bold">SheetShare</h1>
                         <p className="py-6">
                             Simple collaborative spreadsheet. 
@@ -15,9 +15,9 @@ function Login() {
                         <form className="card-body">
                             <div className="form-control">
                             <label className="label">
-                                <span className="label-text">Email</span>
+                                <span className="label-text">Username</span>
                             </label>
-                            <input type="email" placeholder="email" className="input input-bordered" required />
+                            <input type="text" placeholder="username" className="input input-bordered" required />
                             </div>
                             <div className="form-control">
                             <label className="label">
@@ -25,10 +25,10 @@ function Login() {
                             </label>
                             <input type="password" placeholder="password" className="input input-bordered" required />
                             <label className="label">
-                                <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
+                                <a href="/signup" className="label-text-alt link link-hover">No account yet?</a>
                             </label>
                             </div>
-                            <div className="form-control mt-6">
+                            <div className="form-control pt-6">
                             <button className="btn btn-primary">Login</button>
                             </div>
                         </form>
