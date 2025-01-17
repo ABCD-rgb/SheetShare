@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useState } from "react";
-import Error from "../components/Alerts/Error";
 
 
 function Signup() {
