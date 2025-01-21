@@ -1,18 +1,39 @@
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Navigate } from 'react-router-dom';
+import { io } from 'socket.io-client';
 import Header from '../components/Header';
 import { FaMessage, FaCodeCompare } from 'react-icons/fa6';
 import Spreadsheet from 'react-spreadsheet';
 
 function Sheet() {
     const authToken = localStorage.getItem('token');
-
+    const username = localStorage.getItem('username');
+    const socketRef = useRef<any>(null);
+    
     useEffect(() => {
         fetchSheets();
+
+        socketRef.current = io('http://localhost:3000');
+        socketRef.current.emit('join', username);
+
+        // listen for cell updates from the server
+        socketRef.current.on('cellUpdated', ({ row, col, value }: { row: number, col: number, value: string }) => {
+            setData((prevData) => {
+                console.log("prevData:", prevData);
+                const newData = [...prevData];
+                console.log("newData:", newData, "row:", row, "col:", col, "value:", value);
+                newData[row][col] = { value };
+                return newData;
+            });
+        });
+
+        return () => {
+            socketRef.current.disconnect();
+        };
     }, []);
 
-    const [data, setData] = useState([]);
+    const [data, setData] = useState<{ value: any }[][]>([]);
     const [activeCell, setActiveCell] = useState({ row: null, col: null });
     const [previousCell, setPreviousCell] = useState({ row: null, col: null });
 
@@ -23,6 +44,7 @@ function Sheet() {
     //   ]);
 
     const handleChange = (newData: any) => {
+        console.log("handleChange")
         if (activeCell.row !== null && activeCell.col !== null) {
             const { row, col } = activeCell;
             setPreviousCell({ row, col });  // update previous cell (for determinining which cell was previously active)
@@ -31,6 +53,7 @@ function Sheet() {
     };
 
     const handleSelect = (selection: any) => {
+        console.log("handleSelect")
         if (!selection || !selection.range || !selection.range.start) {
             return;
         }
@@ -42,7 +65,9 @@ function Sheet() {
             const newValue = data[previousCell.row][previousCell.col];
 
             // console.log('previousCell:', previousCell, 'activeCell', activeCell, 'newValue:', newValue);
-            updateSheet(previousCell.row, previousCell.col, newValue['value']);
+            if (newValue['value'] !== data[row][column]['value']) {
+                updateSheet(previousCell.row, previousCell.col, newValue['value']);
+            };
         }
     };
 
@@ -68,6 +93,14 @@ function Sheet() {
                 col: _col,
                 value: _value
             });
+
+            // Send cell update to all clients
+            socketRef.current.emit('updateCell', {
+                row: _row,
+                col: _col,
+                value: _value
+            });
+
             console.log(`Cell updated: Row ${_row}, Col ${_col}, Value: ${_value}`);
         } catch (error) {
             console.error('updateSheetError:', error);
