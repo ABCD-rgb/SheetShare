@@ -1,14 +1,22 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 
 function Signup() {
+    
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            navigate("/sheet");
+        }
+    }, []); 
 
-
+    
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         if (name === "username") {
