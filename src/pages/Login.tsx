@@ -1,5 +1,50 @@
+import axios from "axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const navigate = useNavigate();
+
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        if (name === "username") {
+            setUsername(value);
+        } else if (name === "password") { 
+            setPassword(value);
+        }
+    };
+
+    const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        if (!username || !password) {
+            alert("Please fill out all fields.");
+            return;
+        }
+
+        // Send POST request to backend
+        try {
+            const res = await axios.post('http://localhost:3000/auth/validateUser', {
+                username,
+                password
+            });
+
+            if (res.data.success) {
+                localStorage.setItem("username", username);
+                localStorage.setItem("token", res.data.token);
+                // Redirect to sheets page
+                navigate("/sheet");
+            } else {
+                alert(res.data.message);
+            }
+
+        } catch (error) {
+            alert("Login failed.");
+        }
+    };
+
     return (
         <div className="flex justify-around h-screen">
             <div className="card w-full h-96">
@@ -17,19 +62,19 @@ function Login() {
                             <label className="label">
                                 <span className="label-text">Username</span>
                             </label>
-                            <input type="text" placeholder="username" className="input input-bordered" required />
+                            <input name="username" type="text" placeholder="username" onChange={handleChange} className="input input-bordered" required />
                             </div>
                             <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Password</span>
                             </label>
-                            <input type="password" placeholder="password" className="input input-bordered" required />
+                            <input name="password" type="password" placeholder="password" onChange={handleChange} className="input input-bordered" required />
                             <label className="label">
                                 <a href="/signup" className="label-text-alt link link-hover">No account yet?</a>
                             </label>
                             </div>
                             <div className="form-control pt-6">
-                            <button className="btn btn-primary">Login</button>
+                            <button className="btn btn-primary" onClick={handleSubmit}>Login</button>
                             </div>
                         </form>
                         </div>

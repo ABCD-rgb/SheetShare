@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { FaMessage, FaCodeCompare } from 'react-icons/fa6';
 import Spreadsheet from 'react-spreadsheet';
 
-
 function Sheet() {
+    const authToken = localStorage.getItem('token');
+
     useEffect(() => {
         fetchSheets();
     }, []);
@@ -75,7 +77,7 @@ function Sheet() {
 
 
       
-    return(
+    return authToken ? (
         <div className='flex flex-col min-h-screen ml-8 mr-8 mt-8'>
             <Header />
             <div className='flex justify-end'>
@@ -86,7 +88,8 @@ function Sheet() {
                 <Spreadsheet data={data} onChange={handleChange}  onSelect={handleSelect}/>
             </div>
         </div>
-    );
+    ) 
+    : <Navigate to='/' />;
 }
 
 export default Sheet;
