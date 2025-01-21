@@ -3,7 +3,7 @@ import cors from 'cors';
 import { createServer } from 'http'; // For creating an HTTP server
 import { Server } from 'socket.io'; // For WebSocket support
 import router from './router.js';
-import handleSocketConnection from './controller/socket-controller.js';
+import handleSocketConnection from './config/socket.js';
 import connectToMongoDB from './config/mongodb-atlas.js';
 
 const app = express();
