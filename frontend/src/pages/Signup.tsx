@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 function Signup() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,12 +32,15 @@ function Signup() {
                 username,
                 password
             });
-            console.log("signupResponse:", res.data);
-            // Redirect to login page
-            window.location.href = "/";
+
+            if (res.data.success) { 
+                // Redirect to login page
+                navigate("/");
+            } else {
+                alert(res.data.message);
+            }
         } catch (error) {
-            console.error("signupError:", error);
-            alert("User exists or error occurred. Please try again.");
+            alert("Signup failed.");
         }
 
     };

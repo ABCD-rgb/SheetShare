@@ -4,8 +4,8 @@ function Header() {
             <div className="font-bold text-2xl text-center">
                 Hi Arawela!
             </div>
-            <button className="btn btn-error">
-                Button
+            <button className="btn btn-error" onClick={() => {window.location.href = "/";}}>
+                Logout
             </button>
         </div>
     );
