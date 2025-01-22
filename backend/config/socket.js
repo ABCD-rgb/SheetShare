@@ -1,13 +1,15 @@
 
 const handleSocketConnection = (socket) => {
+    var clients = {};
 
     socket.on('join', (data) => {
         console.log(`User ${data} has joined:`, socket.id);
+        clients[socket.id] = data;
     });
 
     // Listen for 'updateCell' event and broadcast to all clients
     socket.on('updateCell', ({ row, col, value }) => {
-        console.log('Cell updated:', row, col, value, "\tby", socket.id);
+        console.log('[', clients[socket.id], '] Cell updated:', row, col, value);
         socket.broadcast.emit('cellUpdated', { row, col, value });
     });    
 

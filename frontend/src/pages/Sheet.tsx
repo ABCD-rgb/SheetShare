@@ -10,6 +10,7 @@ function Sheet() {
     const authToken = localStorage.getItem('token');
     const username = localStorage.getItem('username');
     const socketRef = useRef<any>(null);
+
     
     useEffect(() => {
         fetchSheets();
@@ -20,7 +21,9 @@ function Sheet() {
         // listen for cell updates from the server
         socketRef.current.on('cellUpdated', ({ row, col, value }: { row: number, col: number, value: string }) => {
             setData((prevData) => {
-                console.log("prevData:", prevData);
+                if (activeCell.row === row && activeCell.col === col) {
+                    return prevData;  // do not update the active cell
+                };
                 const newData = [...prevData];
                 console.log("newData:", newData, "row:", row, "col:", col, "value:", value);
                 newData[row][col] = { value };
@@ -36,6 +39,7 @@ function Sheet() {
     const [data, setData] = useState<{ value: any }[][]>([]);
     const [activeCell, setActiveCell] = useState({ row: null, col: null });
     const [previousCell, setPreviousCell] = useState({ row: null, col: null });
+    const [isUpdating, setIsUpdating] = useState(false);
 
     // const [data, setData] = useState([
     //     [{ value: 'ID' }, { value: 'Name' }, { value: 'Age' }],
@@ -87,6 +91,9 @@ function Sheet() {
     };
 
     const updateSheet = async (_row: number, _col: number, _value: string) => {
+        if (isUpdating) return;
+        setIsUpdating(true);
+
         try {
             await axios.put('http://localhost:3000/sheets/updateSheetByIndex', {
                 row: _row,
@@ -104,10 +111,12 @@ function Sheet() {
             console.log(`Cell updated: Row ${_row}, Col ${_col}, Value: ${_value}`);
         } catch (error) {
             console.error('updateSheetError:', error);
+        } finally {
+            setIsUpdating(false);
         }
     }
     // =====================
-
+    
 
       
     return authToken ? (
