@@ -82,41 +82,41 @@ function Sheet() {
 
     // ====  API calls ====
         // Get sheets
-    const fetchSheets = async () => {
-        try {
-            const res = await axios.get('http://localhost:3000/sheets/getAllSheets');
-            const sheets = res.data.formattedSheets;
-            setData(sheets);
-        } catch (error) {
-            console.error("fetchSheetsError:",error);
-        }
-    };
+    // const fetchSheets = async () => {
+    //     try {
+    //         const res = await axios.get('http://localhost:3000/sheets/getAllSheets');
+    //         const sheets = res.data.formattedSheets;
+    //         setData(sheets);
+    //     } catch (error) {
+    //         console.error("fetchSheetsError:",error);
+    //     }
+    // };
 
-    const updateSheet = async (_row: number, _col: number, _value: string) => {
-        if (isUpdating) return;
-        setIsUpdating(true);
+    // const updateSheet = async (_row: number, _col: number, _value: string) => {
+    //     if (isUpdating) return;
+    //     setIsUpdating(true);
 
-        try {
-            await axios.put('http://localhost:3000/sheets/updateSheetByIndex', {
-                row: _row,
-                col: _col,
-                value: _value
-            });
+    //     try {
+    //         await axios.put('http://localhost:3000/sheets/updateSheetByIndex', {
+    //             row: _row,
+    //             col: _col,
+    //             value: _value
+    //         });
 
-            // Send cell update to all clients
-            socketRef.current.emit('updateCell', {
-                row: _row,
-                col: _col,
-                value: _value
-            });
+    //         // Send cell update to all clients
+    //         socketRef.current.emit('updateCell', {
+    //             row: _row,
+    //             col: _col,
+    //             value: _value
+    //         });
 
-            console.log(`Cell updated: Row ${_row}, Col ${_col}, Value: ${_value}`);
-        } catch (error) {
-            console.error('updateSheetError:', error);
-        } finally {
-            setIsUpdating(false);
-        }
-    }
+    //         console.log(`Cell updated: Row ${_row}, Col ${_col}, Value: ${_value}`);
+    //     } catch (error) {
+    //         console.error('updateSheetError:', error);
+    //     } finally {
+    //         setIsUpdating(false);
+    //     }
+    // }
     // =====================
     
 
