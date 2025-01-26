@@ -8,7 +8,7 @@ function Chat({ onClose }: { onClose: () => void }) {
     const username = localStorage.getItem('username') || 'Anonymous';
 
     useEffect(() => {
-        socketRef.current = io('http://localhost:3000');
+        socketRef.current = io(`${import.meta.env.VITE_BACKEND_URL}`);
 
         socketRef.current.on('newMessage', (message: string[]) => {
             console.log('newMessage:', message);

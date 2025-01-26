@@ -19,7 +19,7 @@ function Sheet() {
     const [isChatOpen, setIsChatOpen] = useState(false);
     
     useEffect(() => {
-        socketRef.current = io('http://localhost:3000');
+        socketRef.current = io(`${import.meta.env.VITE_BACKEND_URL}`);
         socketRef.current.emit('join', username);
 
         // listen for initial sheet data from the server
