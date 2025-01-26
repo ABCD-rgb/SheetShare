@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Navigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
-import Header from '../components/Header';
+import Header from '../components/Header.tsx';
 import { FaMessage } from 'react-icons/fa6';
 import Spreadsheet from 'react-spreadsheet';
 import Chat from '../components/Chat.tsx';
