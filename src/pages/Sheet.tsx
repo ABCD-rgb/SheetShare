@@ -1,9 +1,9 @@
-import axios from 'axios';
+// import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
 import { Navigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import Header from '../components/Header';
-import { FaMessage, FaCodeCompare } from 'react-icons/fa6';
+import { FaMessage } from 'react-icons/fa6';
 import Spreadsheet from 'react-spreadsheet';
 
 function Sheet() {
@@ -14,7 +14,6 @@ function Sheet() {
     const [data, setData] = useState<{ value: any }[][]>([]);
     const [activeCell, setActiveCell] = useState({ row: null, col: null });
     const [previousCell, setPreviousCell] = useState({ row: null, col: null });
-    const [isUpdating, setIsUpdating] = useState(false);
     const [tempData, setTempData] = useState<any>(null);
     
     useEffect(() => {
