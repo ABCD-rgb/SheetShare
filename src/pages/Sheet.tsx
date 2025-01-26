@@ -5,6 +5,7 @@ import { io } from 'socket.io-client';
 import Header from '../components/Header';
 import { FaMessage } from 'react-icons/fa6';
 import Spreadsheet from 'react-spreadsheet';
+import Chat from '../components/Chat.tsx';
 
 function Sheet() {
     const authToken = localStorage.getItem('token');
@@ -15,6 +16,7 @@ function Sheet() {
     const [activeCell, setActiveCell] = useState({ row: null, col: null });
     const [previousCell, setPreviousCell] = useState({ row: null, col: null });
     const [tempData, setTempData] = useState<any>(null);
+    const [isChatOpen, setIsChatOpen] = useState(false);
     
     useEffect(() => {
         socketRef.current = io('http://localhost:3000');
@@ -76,8 +78,9 @@ function Sheet() {
         }
     };
 
-
-     
+    const toggleChat = () => {
+        setIsChatOpen(!isChatOpen);
+    };
 
     // ====  API calls ====
         // Get sheets
@@ -124,7 +127,12 @@ function Sheet() {
         <div className='flex flex-col min-h-screen ml-8 mr-8 mt-8'>
             <Header />
             <div className='flex justify-end'>
-                <FaMessage className='mr-8 text-2xl'/>
+                <FaMessage className='mr-8 text-2xl'
+                    onClick={toggleChat}
+                />
+                { isChatOpen && 
+                    <Chat onClose={toggleChat}/>
+                }
             </div>
             <div className='grow flex justify-center items-center'>
                 <Spreadsheet data={data} onChange={handleChange}  onSelect={handleSelect}/>
