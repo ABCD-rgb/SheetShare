@@ -36,7 +36,7 @@ function Signup() {
 
         // Send POST request to backend
         try {
-            const res = await axios.post('http://localhost:3000/auth/createUser', {
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/createUser`, {
                 username,
                 password
             });
