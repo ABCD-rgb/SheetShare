@@ -11,12 +11,21 @@ function Sheet() {
     const username = localStorage.getItem('username');
     const socketRef = useRef<any>(null);
 
+    const [data, setData] = useState<{ value: any }[][]>([]);
+    const [activeCell, setActiveCell] = useState({ row: null, col: null });
+    const [previousCell, setPreviousCell] = useState({ row: null, col: null });
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [tempData, setTempData] = useState<any>(null);
     
     useEffect(() => {
-        fetchSheets();
-
         socketRef.current = io('http://localhost:3000');
         socketRef.current.emit('join', username);
+
+        // listen for initial sheet data from the server
+        socketRef.current.on('initialSheetData', (sheets: any) => {
+            console.log('initialSheetData:', sheets);
+            setData(sheets);
+        });
 
         // listen for cell updates from the server
         socketRef.current.on('cellUpdated', ({ row, col, value }: { row: number, col: number, value: string }) => {
@@ -36,10 +45,6 @@ function Sheet() {
         };
     }, []);
 
-    const [data, setData] = useState<{ value: any }[][]>([]);
-    const [activeCell, setActiveCell] = useState({ row: null, col: null });
-    const [previousCell, setPreviousCell] = useState({ row: null, col: null });
-    const [isUpdating, setIsUpdating] = useState(false);
 
     // const [data, setData] = useState([
     //     [{ value: 'ID' }, { value: 'Name' }, { value: 'Age' }],
@@ -52,8 +57,8 @@ function Sheet() {
         if (activeCell.row !== null && activeCell.col !== null) {
             const { row, col } = activeCell;
             setPreviousCell({ row, col });  // update previous cell (for determinining which cell was previously active)
+            setTempData(newData[row][col].value);
         }
-        setData(newData);
     };
 
     const handleSelect = (selection: any) => {
@@ -66,12 +71,9 @@ function Sheet() {
 
         // If a cell was previously active and is not the same as the current active cell, update the value (on frontend and backend)
         if (previousCell.row !== null && previousCell.col !== null && (previousCell.row !== row || previousCell.col !== column)) {
-            const newValue = data[previousCell.row][previousCell.col];
 
-            // console.log('previousCell:', previousCell, 'activeCell', activeCell, 'newValue:', newValue);
-            if (newValue['value'] !== data[row][column]['value']) {
-                updateSheet(previousCell.row, previousCell.col, newValue['value']);
-            };
+            console.log('Updating cell:', previousCell, 'with value:', tempData);
+            socketRef.current.emit('updateCell', { row: previousCell.row, col: previousCell.col, value: tempData });
         }
     };
 
@@ -123,7 +125,6 @@ function Sheet() {
         <div className='flex flex-col min-h-screen ml-8 mr-8 mt-8'>
             <Header />
             <div className='flex justify-end'>
-                <FaCodeCompare className='mr-8 text-2xl' />
                 <FaMessage className='mr-8 text-2xl'/>
             </div>
             <div className='grow flex justify-center items-center'>
