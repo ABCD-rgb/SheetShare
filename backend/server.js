@@ -12,13 +12,13 @@ app.use(express.json());
 const httpServer = createServer(app);   // to be able to combine API and WebSocket in one server
 const io = new Server(httpServer, {
     cors: {
-        origin: ['http://localhost:5173'], // Allow frontend to connect
+        origin: ['http://localhost:5173', 'https://sheetshare.netlify.app'], // Allow frontend to connect
         credentials: true,
     },
 });
 
 const corsOptions = {
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173', 'https://sheetshare.netlify.app'],
     credentials: true,
 };  
 app.use(cors(corsOptions));
