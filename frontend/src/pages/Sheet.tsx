@@ -124,18 +124,18 @@ function Sheet() {
 
       
     return authToken ? (
-        <div className='flex flex-col min-h-screen ml-8 mr-8 mt-8'>
+    <div className='flex flex-col min-h-screen ml-8 mr-8 mt-8'>
             <Header />
             <div className='flex justify-end'>
                 <FaMessage className='mr-8 text-2xl'
                     onClick={toggleChat}
                 />
-                { isChatOpen && 
+                <div className={`${isChatOpen ? '' : 'hidden'}`}>
                     <Chat onClose={toggleChat}/>
-                }
+                </div>
             </div>
             <div className='grow flex justify-center items-center'>
-                <Spreadsheet data={data} onChange={handleChange}  onSelect={handleSelect}/>
+                <Spreadsheet data={data} onChange={handleChange} onSelect={handleSelect}/>
             </div>
         </div>
     ) 

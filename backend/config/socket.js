@@ -18,7 +18,6 @@ const handleSocketConnection = (socket) => {
                 });
                 return row;
             });
-            console.log('Sending initial sheet data:', formattedSheets);
             socket.emit('initialSheetData', formattedSheets);
         } catch (error) {
             console.error('Error fetching sheet data:', error);
@@ -43,6 +42,10 @@ const handleSocketConnection = (socket) => {
         
         
     });    
+
+    socket.on('sendMessage', (message) => {
+        socket.broadcast.emit('newMessage', message);
+    });
 
     socket.on('disconnect', () => {
         console.log('User has left:', socket.id);
